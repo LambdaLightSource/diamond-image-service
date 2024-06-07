@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: thumbor
+  title: thumbor
+  description: Thumbor server for image processing
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/sscc
+
+---

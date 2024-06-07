@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    uses: ./.github/workflows/_check.yml
+
+  lint:
+    needs: check
+    if: needs.check.outputs.branch-pr == ''
+    strategy:
+      matrix:
+        working-dir: ["thumbor"]
+    uses: ./.github/workflows/_tox.yml
+    with:
+      working-dir: ${{ matrix.working-dir }}
+      tox: pre-commit,type-checking
+
+  test:
+    needs: check
+    if: needs.check.outputs.branch-pr == ''
+    strategy:
+      matrix:
+        working-dir: ["thumbor"]
+        python-version: ["3.11", "dev"]
+      fail-fast: false
+    uses: ./.github/workflows/_test.yml
+    with:
+      working-dir: ${{ matrix.working-dir }}
+      python-version: ${{ matrix.python-version }}
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  # dist:
+  #   needs: check
+  #   if: needs.check.outputs.branch-pr == ''
+  #   strategy:
+  #     matrix:
+  #       working-dir: ["data-reduction-worker", "file-to-stream-converter"]
+  #   uses: ./.github/workflows/_dist.yml
+  #   with:
+  #     working-dir: ${{ matrix.working-dir }}
+  
+  # release:
+  #   if: github.ref_type == 'tag'
+  #   needs: [dist]
+  #   uses: ./.github/workflows/_release.yml
+  #   permissions:
+  #     contents: write

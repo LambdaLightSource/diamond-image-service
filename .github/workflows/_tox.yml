@@ -1,0 +1,30 @@
+on:
+  workflow_call:
+    inputs:
+      working-dir:
+        type: string
+        description: The path to one of the python packages
+        required: true
+      tox:
+        type: string
+        description: What to run under tox
+        required: true
+
+
+jobs:
+  run:
+    runs-on: iris-cpu
+    container: catthehacker/ubuntu:act-latest
+
+    steps:       
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install python packages
+        uses: ./.github/actions/install_requirements
+        with:
+          working-dir: ${{ inputs.working-dir }}
+
+      - name: Run tox
+        working-directory: ${{ inputs.working-dir }}
+        run: tox -e ${{ inputs.tox }}
