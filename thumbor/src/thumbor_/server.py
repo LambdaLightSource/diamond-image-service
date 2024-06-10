@@ -34,10 +34,12 @@ import boto3
 from io import BytesIO
 import loaders.bucket_details as bucket_details
 from botocore.config import Config as BotoConfig
+from s3_store.s3_storage import Storage
 
 class UploadHandler(tornado.web.RequestHandler):
     def initialize(self, bucket_name):
         self.bucket_name = bucket_name
+        self.storage = Storage(context=self)
         self.s3 = boto3.client(
             's3',
             region_name="eu-west-2",
@@ -51,33 +53,18 @@ class UploadHandler(tornado.web.RequestHandler):
         fileinfo = self.request.files['media'][0]
         filename = fileinfo['filename']
         filebody = fileinfo['body']
-
         try:
-            self.s3.upload_fileobj(
-                Fileobj=BytesIO(filebody),
-                Bucket=self.bucket_name,
-                Key=filename
-            )
-            self.write({'status': 'success', 'message': f'File {filename} uploaded successfully to S3'})
-        except NoCredentialsError:
-            self.write({'status': 'error', 'message': 'AWS credentials not available'})
+            path = self.storage.put(filename, BytesIO(filebody))
+            self.write({'status': 'success', 'message': f'File {path} uploaded successfully to S3'})
         except Exception as e:
             self.write({'status': 'error', 'message': str(e)})
+
 
     def delete(self):
         filename = self.get_argument('filename')
         try:
-            response = self.s3.delete_object(Bucket=self.bucket_name, Key=filename)
-            if response['ResponseMetadata']['HTTPStatusCode'] == 204:
-                self.s3.delete_object(
-                    Bucket=self.bucket_name,
-                    Key=filename
-                )
-                self.write({'status': 'success', 'message': f'File {filename} deleted successfully from S3'})
-            else:
-                self.write({'status': 'error', 'message': 'Failed to delete the file'})
-        except ClientError as e:
-            self.write({'status': 'error', 'message': str(e)})
+            path = self.storage.delete(filename)
+            self.write({'status': 'success', 'message': f'File {path} deleted successfully from S3'})
         except Exception as e:
             self.write({'status': 'error', 'message': str(e)})
 

@@ -2,6 +2,7 @@ import boto3
 from thumbor.storages import BaseStorage
 import loaders.bucket_details as bucket_details
 from botocore.client import Config
+from botocore.exceptions import ClientError
 
 class Storage(BaseStorage):
     def __init__(self, context):
@@ -16,13 +17,22 @@ class Storage(BaseStorage):
         self.bucket_name = bucket_details.bucket_name
 
     def put(self, path, file_bytes):
-        self.s3_client.put_object(Bucket=self.bucket_name, Key=path, Body=file_bytes)
-        return path
+        try:
+            self.s3_client.put_object(Bucket=self.bucket_name, Key=path, Body=file_bytes)
+            return path
+        except ClientError as e:
+            raise Exception(f"Failed to upload {path}: {str(e)}")
 
     def delete(self, path):
-        self.s3_client.delete_object(Bucket=self.bucket_name, Key=path)
-        return path
-
+        try:
+            response = self.s3_client.delete_object(Bucket=self.bucket_name, Key=path)
+            if response['ResponseMetadata']['HTTPStatusCode'] == 204:
+                return path
+            else:
+                raise Exception(f"Failed to delete {path}")
+        except ClientError as e:
+            raise Exception(f"Failed to delete {path}: {str(e)}")
+        
     def exists(self, path):
         try:
             response = self.s3_client.get_object(Bucket=self.bucket_name, Key=path)
