@@ -1,4 +1,4 @@
-import boto3
+import aioboto3
 from thumbor.storages import BaseStorage
 import loaders.bucket_details as bucket_details
 from botocore.client import Config
