@@ -1,0 +1,64 @@
+{
+    "Rules": [
+        {
+            "ID": "DefaultRule",
+            "Filter": {},
+            "Status": "Enabled",
+            "Expiration": {
+                "Days": 180
+            }
+        },
+        {
+            "ID": "OneDayRule",
+            "Filter": {
+                "Tag": {
+                    "Key": "expiry",
+                    "Value": "1day"
+                }
+            },
+            "Status": "Enabled",
+            "Expiration": {
+                "Days": 1
+            }
+        },
+        {
+            "ID": "ThirtyDaysRule",
+            "Filter": {
+                "Tag": {
+                    "Key": "expiry",
+                    "Value": "30days"
+                }
+            },
+            "Status": "Enabled",
+            "Expiration": {
+                "Days": 30
+            }
+        },
+        {
+            "ID": "OneYearRule",
+            "Filter": {
+                "Tag": {
+                    "Key": "expiry",
+                    "Value": "1year"
+                }
+            },
+            "Status": "Enabled",
+            "Expiration": {
+                "Days": 365
+            }
+        },
+        {
+            "ID": "ThreeYearsRule",
+            "Filter": {
+                "Tag": {
+                    "Key": "expiry",
+                    "Value": "3years"
+                }
+            },
+            "Status": "Enabled",
+            "Expiration": {
+                "Days": 1095
+            }
+        }
+    ]
+}

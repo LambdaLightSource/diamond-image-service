@@ -182,7 +182,7 @@ async def load(
         user_agent = context.config.HTTP_LOADER_DEFAULT_USER_AGENT
 
     chosen_key = url
-    url = generate_encoded_url(chosen_key)
+    url = await generate_encoded_url(chosen_key)
 
     url = normalize_url_func(url)
     req = tornado.httpclient.HTTPRequest(

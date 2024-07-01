@@ -31,8 +31,6 @@ import tornado.web
 from handlers.upload_handler import UploadHandler
 
 
-
-
 def get_as_integer(value):
     try:
         return int(value)

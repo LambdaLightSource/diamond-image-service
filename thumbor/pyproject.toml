@@ -3,7 +3,7 @@ requires = ["setuptools>=64", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "thumbor"
+name = "dls-thumbor-extention"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: Apache Software License",
@@ -14,7 +14,7 @@ classifiers = [
 ]
 
 description = "Processes images enabling visulisation, resizing, reformating and retriving/storing of images in NAS S3 Buckets"
-dependencies = ["thumbor", "tornado", "boto3", image"]
+dependencies = ["thumbor", "tornado", "boto3", "image", "pytz", "asyncio"]
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.md"
