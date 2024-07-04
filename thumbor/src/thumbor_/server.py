@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # thumbor imaging service
 # https://github.com/thumbor/thumbor/wiki
 
@@ -17,18 +15,16 @@ from shutil import which
 from socket import socket
 
 import tornado.ioloop
+import tornado.web
+from handlers.upload_handler import UploadHandler
 from PIL import Image
-from tornado.httpserver import HTTPServer
-from tornado.netutil import bind_unix_socket
-
 from thumbor.config import Config
 from thumbor.console import get_server_parameters
 from thumbor.context import Context
 from thumbor.importer import Importer
 from thumbor.signal_handler import setup_signal_handler
-import tornado.web
-
-from handlers.upload_handler import UploadHandler
+from tornado.httpserver import HTTPServer
+from tornado.netutil import bind_unix_socket
 
 
 def get_as_integer(value):
@@ -44,9 +40,7 @@ def get_config(config_path, use_environment=False):
 
     lookup_paths = [os.curdir, expanduser("~"), "/etc/", dirname(__file__)]
 
-    return Config.load(
-        config_path, conf_name="thumbor.conf", lookup_paths=lookup_paths
-    )
+    return Config.load(config_path, conf_name="thumbor.conf", lookup_paths=lookup_paths)
 
 
 def configure_log(config, log_level):
@@ -65,10 +59,8 @@ def get_importer(config):
     importer.import_modules()
 
     if importer.error_handler_class is not None:
-        importer.error_handler = (
-            importer.error_handler_class(  # pylint: disable=not-callable
-                config
-            )
+        importer.error_handler = importer.error_handler_class(  # pylint: disable=not-callable
+            config
         )
 
     return importer
@@ -109,12 +101,15 @@ def get_application(context):
         application.add_handlers(
             r".*$",
             [
-                (r"/upload", UploadHandler, dict(bucket_name=context.config.S3_BUCKET_NAME)),
-            ]
+                (
+                    r"/upload",
+                    UploadHandler,
+                    {"bucket_name": context.config.S3_BUCKET_NAME},
+                ),
+            ],
         )
 
     return application
-
 
 
 def get_socket_from_fd(fname_or_fd, *, non_blocking=False):

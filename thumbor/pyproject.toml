@@ -14,7 +14,15 @@ classifiers = [
 ]
 
 description = "Processes images enabling visulisation, resizing, reformating and retriving/storing of images in NAS S3 Buckets"
-dependencies = ["thumbor", "tornado", "boto3", "image", "pytz", "asyncio"]
+dependencies = [
+    "thumbor",
+    "tornado",
+    "boto3",
+    "image",
+    "pytz",
+    "asyncio",
+    "aioboto3",
+]
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.md"

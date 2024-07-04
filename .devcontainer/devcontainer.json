@@ -43,7 +43,7 @@
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces,type=bind",
     "workspaceFolder": "/workspaces",
     // After the container is created, install the python project in editable form
-    "postCreateCommand": "pip install $([ -f dev-requirements.txt ] && echo '-c dev-requirements.txt') -e './data-reduction-worker[dev]' -e './data-reduction-orchestration[dev]' -e './file-to-stream-converter[dev]' -e './ptystream-aio-zmq[dev]' && pre-commit install",
+    "postCreateCommand": "pip install $([ -f dev-requirements.txt ] && echo '-c dev-requirements.txt') -e './thumbor[dev]' && pre-commit install",
     "mounts": [
         "source=/scratch,target=/scratch,type=bind,consistency=cached"
     ]
