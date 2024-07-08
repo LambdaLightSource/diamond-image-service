@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: thumbor-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: thumbor
@@ -16,5 +16,5 @@ spec:
       - name: thumbor
         image: dlscloud/thumbor-app:v1
         ports:
-        - containerPort: 8000
+        - containerPort: 8888
         imagePullPolicy: Always
