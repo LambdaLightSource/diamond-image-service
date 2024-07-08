@@ -17,7 +17,6 @@ description = "Processes images enabling visulisation, resizing, reformating and
 dependencies = [
     "thumbor",
     "tornado",
-    "boto3",
     "image",
     "pytz",
     "asyncio",

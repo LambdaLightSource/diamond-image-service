@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thumbor-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: thumbor
+  template:
+    metadata:
+      labels:
+        app: thumbor
+    spec:
+      containers:
+      - name: thumbor
+        image: dlscloud/thumbor-app:v1
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Always
