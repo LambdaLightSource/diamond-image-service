@@ -23,6 +23,7 @@ from thumbor.console import get_server_parameters
 from thumbor.context import Context
 from thumbor.importer import Importer
 from thumbor.signal_handler import setup_signal_handler
+from thumbor.utils import logger
 from tornado.httpserver import HTTPServer
 from tornado.netutil import bind_unix_socket
 
@@ -39,7 +40,7 @@ def get_config(config_path, use_environment=False):
         Config.allow_environment_variables()
 
     lookup_paths = [os.curdir, expanduser("~"), "/etc/", dirname(__file__)]
-
+    print("loading thumbor.conf")
     return Config.load(config_path, conf_name="thumbor.conf", lookup_paths=lookup_paths)
 
 
@@ -159,6 +160,7 @@ def main(arguments=None):
     config = get_config(
         server_parameters.config_path, server_parameters.use_environment
     )
+    logger.warning(config.items)
     configure_log(config, server_parameters.log_level.upper())
 
     validate_config(config, server_parameters)
