@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
       - name: thumbor
-        image: dlscloud/thumbor-app:v4
+        image: dlscloud/thumbor-app:v1
         ports:
-        - containerPort: 8000
+        - containerPort: 8888
         volumeMounts:
         - name: thumbor-storage
-          mountPath: "/data/thumbor"
+          mountPath: "/data"
         imagePullPolicy: Always
       volumes:
       - name: thumbor-storage

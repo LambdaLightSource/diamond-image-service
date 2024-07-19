@@ -19,6 +19,7 @@ dependencies = [
     "tornado",
     "image",
     "pytz",
+    "pycurl",
     "asyncio",
     "aioboto3",
 ]

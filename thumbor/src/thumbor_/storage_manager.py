@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 from datetime import datetime, timedelta
 
@@ -9,9 +10,10 @@ from loaders import bucket_details as bucket_details
 
 
 class StorageManager:
-    def __init__(self):
+    def __init__(self, expiry_days):
         self.session = aioboto3.Session()
         self.bucket_name = bucket_details.bucket_name
+        self.expiry_duration = timedelta(days=expiry_days)
 
     async def list_and_delete_old_objects(self):
         print("Listing objects...")
@@ -49,7 +51,7 @@ class StorageManager:
                     time_diff = current_time_uk - upload_time
 
                     print(f"Time difference for {key}: {time_diff}")
-                    if time_diff > timedelta(minutes=1):
+                    if time_diff > self.expiry_duration:
                         print(f"Attempting to delete {key}")
                         delete_response = await s3_client.delete_object(
                             Bucket=self.bucket_name, Key=key
@@ -66,11 +68,21 @@ class StorageManager:
 
 
 async def main():
-    storage_manager = StorageManager()
+    parser = argparse.ArgumentParser(
+        description="Manage S3 bucket storage based on object age."
+    )
+    parser.add_argument(
+        "-d",
+        "--days",
+        type=int,
+        default=180,
+        help="Number of days after which to delete old objects (default is 180 days).",
+    )
+    args = parser.parse_args()
+
+    storage_manager = StorageManager(expiry_days=args.days)
     await storage_manager.list_and_delete_old_objects()
 
 
 if __name__ == "__main__":
-    import asyncio
-
     asyncio.run(main())
