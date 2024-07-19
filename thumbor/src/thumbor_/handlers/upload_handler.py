@@ -13,8 +13,9 @@ class UploadHandler(tornado.web.RequestHandler):
         fileinfo = self.request.files["media"][0]
         filename = fileinfo["filename"]
         filebody = fileinfo["body"]
+        lifespan = self.get_query_argument("lifespan", default="180")
         try:
-            path = await self.storage.put(filename, BytesIO(filebody))
+            path = await self.storage.put(filename, BytesIO(filebody), lifespan)
             self.write(
                 {
                     "status": "success",

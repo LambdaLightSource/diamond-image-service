@@ -1,19 +1,16 @@
-import argparse
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import aioboto3
 import pytz
 from botocore.config import Config
-from botocore.exceptions import ClientError
 from loaders import bucket_details as bucket_details
 
 
 class StorageManager:
-    def __init__(self, expiry_days):
+    def __init__(self):
         self.session = aioboto3.Session()
         self.bucket_name = bucket_details.bucket_name
-        self.expiry_duration = timedelta(days=expiry_days)
 
     async def list_and_delete_old_objects(self):
         print("Listing objects...")
@@ -31,56 +28,43 @@ class StorageManager:
                         print(f"Checking object: {obj['Key']}")
                         await self.check_and_delete_object(s3_client, obj["Key"])
 
-    async def check_and_delete_object(self, s3_client, key, timeout=100):
-        print(f"Fetching object: {key}")
-        try:
-            response = await asyncio.wait_for(
-                s3_client.get_object(Bucket=self.bucket_name, Key=key), timeout
-            )
-            async with response["Body"]:
-                print(f"Got object: {key}")
-                upload_time_str = response["Metadata"].get("upload_time")
+    async def check_and_delete_object(self, s3_client, key):
+        expiration_date = await self.fetch_expiration_date(s3_client, key)
+        if expiration_date:
+            current_time_uk = datetime.now(pytz.timezone("Europe/London"))
+            if current_time_uk >= expiration_date:
+                await self.delete_object(s3_client, key)
 
-                if upload_time_str:
-                    uk_zone = pytz.timezone("Europe/London")
-                    upload_time = datetime.strptime(
-                        upload_time_str, "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    upload_time = uk_zone.localize(upload_time)
-                    current_time_uk = datetime.now(uk_zone)
-                    time_diff = current_time_uk - upload_time
+    async def fetch_expiration_date(self, s3_client, key):
+        print(f"Fetching object for metadata: {key}")
+        response = await s3_client.get_object(Bucket=self.bucket_name, Key=key)
+        async with response["Body"]:
+            print(f"Got object: {key}")
+            expiration_date_str = response["Metadata"].get("expiration_date")
+            if expiration_date_str:
+                expiration_date = datetime.strptime(
+                    expiration_date_str, "%Y-%m-%dT%H:%M:%SZ"
+                )
+                expiration_date = pytz.timezone("Europe/London").localize(
+                    expiration_date
+                )
+                return expiration_date
+            else:
+                print(f"No upload_time metadata found for {key}")
 
-                    print(f"Time difference for {key}: {time_diff}")
-                    if time_diff > self.expiry_duration:
-                        print(f"Attempting to delete {key}")
-                        delete_response = await s3_client.delete_object(
-                            Bucket=self.bucket_name, Key=key
-                        )
-                        print(f"Delete response for {key}: {delete_response}")
-                else:
-                    print(f"No upload_time metadata found for {key}")
-        except asyncio.TimeoutError:
-            print(f"Timeout occurred while fetching object: {key}")
-        except ClientError as e:
-            print(f"Failed to fetch or delete {key} due to a client error: {str(e)}")
-        except Exception as e:
-            print(f"Unexpected exception {key}: {str(e)}")
+    async def delete_object(self, s3_client, key):
+        print(f"Attempting to delete {key}")
+        delete_response = await s3_client.delete_object(
+            Bucket=self.bucket_name, Key=key
+        )
+        if delete_response["ResponseMetadata"]["HTTPStatusCode"] == 204:
+            print(f"Delete response for {key}: {delete_response}")
+        else:
+            print(f"Failed to delete {key}")
 
 
 async def main():
-    parser = argparse.ArgumentParser(
-        description="Manage S3 bucket storage based on object age."
-    )
-    parser.add_argument(
-        "-d",
-        "--days",
-        type=int,
-        default=180,
-        help="Number of days after which to delete old objects (default is 180 days).",
-    )
-    args = parser.parse_args()
-
-    storage_manager = StorageManager(expiry_days=args.days)
+    storage_manager = StorageManager()
     await storage_manager.list_and_delete_old_objects()
 
 

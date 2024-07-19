@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import aioboto3
 import loaders.bucket_details as bucket_details
@@ -14,10 +14,15 @@ class Storage(BaseStorage):
         self.session = aioboto3.Session()
         self.bucket_name = bucket_details.bucket_name
 
-    async def put(self, path, file_bytes):
+    async def put(self, path, file_bytes, lifespan):
         uk_zone = pytz.timezone("Europe/London")
-        current_time = datetime.now(uk_zone).strftime("%Y-%m-%dT%H:%M:%SZ")
-        metadata = {"upload_time": current_time}
+        current_time = datetime.now(uk_zone)
+        expiration_date = current_time + timedelta(days=int(lifespan))
+
+        metadata = {
+            "upload_time": current_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "expiration_date": expiration_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }
         async with self.session.client(
             "s3",
             endpoint_url=bucket_details.ep_url,

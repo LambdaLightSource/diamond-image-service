@@ -14,23 +14,31 @@ config = {
 
 uk_zone = pytz.timezone("Europe/London")
 
-days_ago = [1, 30, 180, 365, 1095]
+lifespan_days = [1, 30, 180, 365, 1095]
 
 
-async def upload_file(s3_client, bucket_name, key, days_old):
-    date_uploaded = datetime.now(uk_zone) - timedelta(days=days_old)
-    metadata = {"upload_time": date_uploaded.strftime("%Y-%m-%dT%H:%M:%SZ")}
+async def upload_file(s3_client, bucket_name, key, lifespan):
+    current_time = datetime.now(uk_zone)
+
+    expiration_date = current_time - timedelta(days=lifespan)
+    metadata = {
+        "upload_time": current_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "expiration_date": expiration_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
     await s3_client.put_object(
         Bucket=bucket_name, Key=key, Body=b"Sample file content", Metadata=metadata
     )
-    print(f"Uploaded {key} with upload_time: {metadata['upload_time']}")
+    print(
+        f"Uploaded {key} at upload_time: {metadata['upload_time']} "
+        f"expiration_date: {metadata['expiration_date']}"
+    )
 
 
 async def populate_bucket():
     session = aioboto3.Session()
     async with session.client("s3", **config) as s3_client:
-        for days in days_ago:
-            key = f"testfile_{days}_days_old.txt"
+        for days in lifespan_days:
+            key = f"testfile_{days}_days_expired.txt"
             await upload_file(s3_client, bucket_details.bucket_name, key, days)
 
 
