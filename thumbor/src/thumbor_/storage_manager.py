@@ -1,24 +1,24 @@
 import asyncio
+import os
 from datetime import datetime
 
 import aioboto3
 import pytz
 from botocore.config import Config
-from loaders import bucket_details as bucket_details
 
 
 class StorageManager:
     def __init__(self):
         self.session = aioboto3.Session()
-        self.bucket_name = bucket_details.bucket_name
+        self.bucket_name = os.environ.get("BUCKET_NAME")
 
     async def list_and_delete_old_objects(self):
         print("Listing objects...")
         async with self.session.client(
             "s3",
-            endpoint_url=bucket_details.ep_url,
-            aws_access_key_id=bucket_details.key_id,
-            aws_secret_access_key=bucket_details.access_key,
+            endpoint_url=os.environ.get("EP_URL"),
+            aws_access_key_id=os.environ.get("KEY_ID"),
+            aws_secret_access_key=os.environ.get("ACCESS_KEY"),
             config=Config(signature_version="s3v4"),
         ) as s3_client:
             paginator = s3_client.get_paginator("list_objects_v2")

@@ -1,7 +1,7 @@
+import os
 from datetime import datetime, timedelta
 
 import aioboto3
-import loaders.bucket_details as bucket_details
 import pytz
 from botocore.config import Config
 from botocore.exceptions import ClientError
@@ -12,7 +12,7 @@ class Storage(BaseStorage):
     def __init__(self, context):
         super().__init__(context)
         self.session = aioboto3.Session()
-        self.bucket_name = bucket_details.bucket_name
+        self.bucket_name = os.environ.get("BUCKET_NAME")
 
     async def put(self, path, file_bytes, lifespan):
         uk_zone = pytz.timezone("Europe/London")
@@ -25,9 +25,9 @@ class Storage(BaseStorage):
         }
         async with self.session.client(
             "s3",
-            endpoint_url=bucket_details.ep_url,
-            aws_access_key_id=bucket_details.key_id,
-            aws_secret_access_key=bucket_details.access_key,
+            endpoint_url=os.environ.get("EP_URL"),
+            aws_access_key_id=os.environ.get("KEY_ID"),
+            aws_secret_access_key=os.environ.get("ACCESS_KEY"),
             config=Config(signature_version="s3v4"),
         ) as s3_client:
             try:
@@ -44,9 +44,9 @@ class Storage(BaseStorage):
     async def delete(self, path):
         async with self.session.client(
             "s3",
-            endpoint_url=bucket_details.ep_url,
-            aws_access_key_id=bucket_details.key_id,
-            aws_secret_access_key=bucket_details.access_key,
+            endpoint_url=os.environ.get("EP_URL"),
+            aws_access_key_id=os.environ.get("KEY_ID"),
+            aws_secret_access_key=os.environ.get("ACCESS_KEY"),
             config=Config(signature_version="s3v4"),
         ) as s3_client:
             try:

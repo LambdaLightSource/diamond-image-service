@@ -17,6 +17,27 @@ spec:
         image: dlscloud/thumbor-app:v1
         ports:
         - containerPort: 8888
+        env:
+          - name: EP_URL
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: ep_url
+          - name: KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: key_id
+          - name: ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: access_key
+          - name: BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: bucket_name
         volumeMounts:
         - name: thumbor-storage
           mountPath: "/data"

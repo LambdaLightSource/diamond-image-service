@@ -1,14 +1,14 @@
 import asyncio
+import os
 from datetime import datetime, timedelta
 
 import aioboto3
 import pytz
-from loaders import bucket_details
 
 config = {
-    "endpoint_url": bucket_details.ep_url,
-    "aws_access_key_id": bucket_details.key_id,
-    "aws_secret_access_key": bucket_details.access_key,
+    "endpoint_url": os.environ.get("EP_URL"),
+    "aws_access_key_id": os.environ.get("KEY_ID"),
+    "aws_secret_access_key": os.environ.get("ACCESS_KEY"),
     "region_name": "eu-west-2",
 }
 
@@ -39,7 +39,7 @@ async def populate_bucket():
     async with session.client("s3", **config) as s3_client:
         for days in lifespan_days:
             key = f"testfile_{days}_days_expired.txt"
-            await upload_file(s3_client, bucket_details.bucket_name, key, days)
+            await upload_file(s3_client, os.environ.get("BUCKET_NAME"), key, days)
 
 
 async def main():

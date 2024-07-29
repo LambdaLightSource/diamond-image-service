@@ -105,7 +105,6 @@ def get_application(context):
                 (
                     r"/upload",
                     UploadHandler,
-                    {"bucket_name": context.config.S3_BUCKET_NAME},
                 ),
             ],
         )

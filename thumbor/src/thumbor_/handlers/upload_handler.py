@@ -1,3 +1,4 @@
+import os
 from io import BytesIO
 
 import tornado.web
@@ -5,8 +6,8 @@ from s3_store.s3_storage import Storage
 
 
 class UploadHandler(tornado.web.RequestHandler):
-    def initialize(self, bucket_name):
-        self.bucket_name = bucket_name
+    def initialize(self):
+        self.bucket_name = os.environ.get("BUCKET_NAME")
         self.storage = Storage(context=self)
 
     async def put(self):
