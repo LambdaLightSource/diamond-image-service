@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: thumbor
-        image: dlscloud/thumbor-app:v1
+        image: gcr.io/diamond-privreg/image-service/dls-thumbor-extension:latest
         ports:
         - containerPort: 8888
         env:
