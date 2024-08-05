@@ -17,6 +17,7 @@ spec:
         image: gcr.io/diamond-privreg/image-service/dls-thumbor-extension:latest
         ports:
         - containerPort: 8888
+        args: ["python", "/app/src/thumbor_/__main__.py", "server", "--serve"]
         env:
           - name: EP_URL
             valueFrom:

@@ -30,4 +30,5 @@ RUN useradd -m thumbor
 
 USER thumbor
 
-CMD ["python", "/app/src/thumbor_/server.py"]
+CMD ["python", "-m", "app.src.thumbor_.__main__", "server", "--serve"]
+
