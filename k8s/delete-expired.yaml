@@ -11,26 +11,26 @@ spec:
           containers:
           - name: storage-cleanup
             image: gcr.io/diamond-privreg/image-service/dls-thumbor-extension:latest
-            args: ["python", "/app/src/thumbor_/main.py", "storage", "--delete-expired"]
+            args: ["python", "-m", "thumbor_.__main__", "--delete-expired"]
             env:
-          - name: EP_URL
-            valueFrom:
-              secretKeyRef:
-                name: thumbor-secrets
-                key: ep_url
-          - name: KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: thumbor-secrets
-                key: key_id
-          - name: ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: thumbor-secrets
-                key: access_key
-          - name: BUCKET_NAME
-            valueFrom:
-              secretKeyRef:
-                name: thumbor-secrets
-                key: bucket_name
+              - name: EP_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: thumbor-secrets
+                    key: ep_url
+              - name: KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: thumbor-secrets
+                    key: key_id
+              - name: ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: thumbor-secrets
+                    key: access_key
+              - name: BUCKET_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: thumbor-secrets
+                    key: bucket_name
           restartPolicy: OnFailure

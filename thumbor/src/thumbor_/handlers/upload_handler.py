@@ -2,7 +2,8 @@ import os
 from io import BytesIO
 
 import tornado.web
-from s3_store.s3_storage import Storage
+
+from thumbor_.s3_store.s3_storage import Storage
 
 
 class UploadHandler(tornado.web.RequestHandler):

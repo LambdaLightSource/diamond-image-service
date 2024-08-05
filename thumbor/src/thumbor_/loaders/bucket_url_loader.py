@@ -12,9 +12,10 @@ from typing import Pattern
 from urllib.parse import quote, unquote, urlparse
 
 import tornado.httpclient
-from loaders.generate_object_url import generate_encoded_url
 from thumbor.loaders import LoaderResult
 from thumbor.utils import logger
+
+from thumbor_.loaders.generate_object_url import generate_encoded_url
 
 try:
     import tornado.curl_httpclient  # pylint: disable=ungrouped-imports

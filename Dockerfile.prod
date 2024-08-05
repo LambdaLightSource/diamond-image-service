@@ -24,11 +24,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY thumbor/src /app/src/
 
+ENV PYTHONPATH=/app/src  
+
 EXPOSE 8888
 
 RUN useradd -m thumbor
 
 USER thumbor
 
-CMD ["python", "-m", "app.src.thumbor_.__main__", "server", "--serve"]
-
+CMD ["python", "-m", "thumbor_.__main__", "--serve"]

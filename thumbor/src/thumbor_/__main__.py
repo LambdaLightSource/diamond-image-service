@@ -1,8 +1,9 @@
-import argparse
 import asyncio
+import sys
+from argparse import ArgumentParser
 
-from thumbor.src.thumbor_.server import main as server_main
-from thumbor.src.thumbor_.storage_manager import StorageManager
+from thumbor_.server import main as server_main
+from thumbor_.storage_manager import StorageManager
 
 
 async def manage_storage(delete_old=False):
@@ -12,31 +13,21 @@ async def manage_storage(delete_old=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Thumbor CLI for managing server and storage"
-    )
-    subparsers = parser.add_subparsers(dest="command", help="Commands")
-
-    server_parser = subparsers.add_parser("server", help="Start the Thumbor server")
-    server_parser.add_argument("--serve", action="store_true", help="Start the server")
-
-    storage_parser = subparsers.add_parser(
-        "storage", help="Delete expired objects from the bucket"
-    )
-    storage_parser.add_argument(
+    parser = ArgumentParser(description="Thumbor CLI for managing server and storage")
+    parser.add_argument("--serve", action="store_true", help="Start the Thumbor server")
+    parser.add_argument(
         "--delete-expired",
         action="store_true",
         help="Delete expired objects from the bucket",
     )
 
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
 
-    if args.command == "server" and args.serve:
+    if args.serve:
+        sys.argv[1:] = unknown
         server_main()
-    elif args.command == "storage" and args.delete_expired:
+    elif args.delete_expired:
         asyncio.run(manage_storage(delete_old=True))
-    else:
-        parser.print_help()
 
 
 if __name__ == "__main__":

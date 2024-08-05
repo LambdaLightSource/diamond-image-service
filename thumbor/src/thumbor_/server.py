@@ -16,7 +16,6 @@ from socket import socket
 
 import tornado.ioloop
 import tornado.web
-from handlers.upload_handler import UploadHandler
 from PIL import Image
 from thumbor.config import Config
 from thumbor.console import get_server_parameters
@@ -26,6 +25,8 @@ from thumbor.signal_handler import setup_signal_handler
 from thumbor.utils import logger
 from tornado.httpserver import HTTPServer
 from tornado.netutil import bind_unix_socket
+
+from thumbor_.handlers.upload_handler import UploadHandler
 
 
 def get_as_integer(value):
