@@ -6,10 +6,9 @@ from thumbor_.server import main as server_main
 from thumbor_.storage_manager import StorageManager
 
 
-async def manage_storage(delete_old=False):
+async def manage_storage():
     manager = StorageManager()
-    if delete_old:
-        await manager.list_and_delete_old_objects()
+    await manager.list_and_delete_old_objects()
 
 
 def main():
@@ -25,9 +24,9 @@ def main():
 
     if args.serve:
         sys.argv[1:] = unknown
-        server_main()
+        server_main(unknown)
     elif args.delete_expired:
-        asyncio.run(manage_storage(delete_old=True))
+        asyncio.run(manage_storage())
 
 
 if __name__ == "__main__":

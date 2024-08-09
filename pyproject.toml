@@ -1,0 +1,111 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+version = "0.1.0"
+name = "dls-thumbor-extension"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+description = "Processes images enabling visulisation, resizing, reformating and retriving/storing of images in NAS S3 Buckets"
+dependencies = [
+    "thumbor",
+    "tornado",
+    "image",
+    "pytz",
+    "pycurl",
+    "aioboto3",
+]
+
+license.file = "LICENSE"
+readme = "README.md"
+requires-python = ">=3.8"
+
+[project.optional-dependencies]
+dev = [
+    "copier",
+    "pipdeptree",
+    "pre-commit",
+    "pyright",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "ruff",
+    "tox-direct",
+    "types-mock",
+]
+
+[project.scripts]
+thumbor = "thumbor_.__main__:main"
+
+[project.urls]
+GitHub = "https://github.com/LambdaLightSource/diamond-image-service"
+
+[[project.authors]] # Further authors may be added by duplicating this section
+email = "john.davies@diamond.ac.uk"
+name = "John Davies"
+
+[tool.setuptools_scm]
+version_file = "src/thumbor_/_version.py"
+root = "../"
+
+[tool.pyright]
+reportMissingImports = false # Ignore missing stubs in imported modules
+
+[tool.pytest.ini_options]
+# Run pytest with all our checkers, and don't spam us with massive tracebacks on error
+addopts = """
+    --tb=native -vv 
+    """
+# https://iscinumpy.gitlab.io/post/bound-version-constraints/#watch-for-warnings
+filterwarnings = "error"
+# Doctest python code in docs, python code in src docstrings, test functions in tests
+testpaths = "docs src tests"
+
+[tool.coverage.run]
+data_file = "/tmp/diamond-image-service.coverage"
+
+[tool.coverage.paths]
+# Tests are run from installed location, map back to the src directory
+source = ["src", "**/site-packages/"]
+
+# tox must currently be configured via an embedded ini string
+# See: https://github.com/tox-dev/tox/issues/999
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+skipsdist=True
+
+[testenv:{pre-commit,type-checking,tests}]
+# Don't create a virtualenv for the command, requires tox-direct plugin
+direct = True
+passenv = *
+allowlist_externals =
+    pytest
+    pre-commit
+    pyright
+commands =
+    pre-commit: pre-commit run --all-files {posargs}
+    type-checking: pyright src tests {posargs}
+    tests: pytest --cov=thumbor_ --cov-report term --cov-report xml:cov.xml {posargs}
+"""
+
+[tool.ruff]
+src = ["src", "tests"]
+line-length = 88
+lint.select = [
+    "B",  # flake8-bugbear - https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+    "C4", # flake8-comprehensions - https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4
+    "E",  # pycodestyle errors - https://docs.astral.sh/ruff/rules/#error-e
+    "F",  # pyflakes rules - https://docs.astral.sh/ruff/rules/#pyflakes-f
+    "W",  # pycodestyle warnings - https://docs.astral.sh/ruff/rules/#warning-w
+    "I",  # isort - https://docs.astral.sh/ruff/rules/#isort-i
+    "UP", # pyupgrade - https://docs.astral.sh/ruff/rules/#pyupgrade-up
+]
