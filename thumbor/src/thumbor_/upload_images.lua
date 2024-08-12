@@ -11,7 +11,7 @@ end
 request = function()
     local image_num = math.random(0, 999) 
     local path = "/upload"
-    local file_path = "thumbor/src/generated_images/random_image_" .. string.format("%06d", image_num) .. ".png"
+    local file_path = "/generated_images/random_image_" .. string.format("%06d", image_num) .. ".png"
     local body = read_file(file_path)
     if body == nil then
         return wrk.format(nil, path) 
