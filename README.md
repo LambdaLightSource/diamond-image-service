@@ -99,3 +99,6 @@ There are two cron jobs: one purges the cache and the other manages storage dele
 
 Please ensure the latest version of the dev containers app is installed. Click the blue icon in the bottom left corner of your editor to open the menu and select "Rebuild in Container" to set up your development environment.
 
+# Technical Architecture
+
+![Thumbor Architecture](https://github.com/LambdaLightSource/diamond-image-service/blob/thumbor/assets/ThumborArchitecture.png)
