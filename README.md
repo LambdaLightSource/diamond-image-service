@@ -93,7 +93,7 @@ git clone https://github.com/LambdaLightSource/CronCachePurger
 kubectl apply -f cronjob.yaml
 ```
 
-There are two cron jobs: one purges the cache and the other manages storage deletion from the NAS S3 Bucket. These can be triggered and configured through the Kubernetes dashboard.
+There are two cron jobs: one purges the cache and the other manages storage deletion from the NAS S3 Bucket. These can be triggered through the Kubernetes dashboard, and the schedule configured through the YAML.
 
 # Testing Locally with Dev Containers.
 
