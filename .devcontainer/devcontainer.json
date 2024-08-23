@@ -9,10 +9,10 @@
         // Allow X11 apps to run inside the container
         "DISPLAY": "${localEnv:DISPLAY}",
         // Inherit environment variables from the host machine
-        "EP_URL": "${localEnv:EP_URL}",
-        "KEY_ID": "${localEnv:KEY_ID}",
-        "ACCESS_KEY": "${localEnv:ACCESS_KEY}",
-        "BUCKET_NAME": "${localEnv:BUCKET_NAME}"
+        // "EP_URL": "${localEnv:EP_URL}",
+        // "KEY_ID": "${localEnv:KEY_ID}",
+        // "ACCESS_KEY": "${localEnv:ACCESS_KEY}",
+        // "BUCKET_NAME": "${localEnv:BUCKET_NAME}"
     },
     "customizations": {
         "vscode": {
