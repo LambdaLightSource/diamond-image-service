@@ -101,4 +101,4 @@ Please ensure the latest version of the dev containers app is installed. Click t
 
 # Technical Architecture
 
-![Thumbor Architecture](https://github.com/LambdaLightSource/diamond-image-service/thumbor/assets/ThumborArchitecture.png)
+![Thumbor Architecture](thumbor/assets/ThumborArchitecture.png)
