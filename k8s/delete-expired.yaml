@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: storage-cleanup
-            image: gcr.io/diamond-privreg/image-service/dls-thumbor-extension:latest
+            image: gcr.io/diamond-privreg/image-service/dls-thumbor-extension:v1
             args: ["python", "-m", "thumbor_.__main__", "--delete-expired"]
             env:
               - name: EP_URL
