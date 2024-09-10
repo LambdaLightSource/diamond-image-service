@@ -21,12 +21,19 @@ class Storage(BaseStorage):
         pass
 
     async def put(self, path, file_bytes, lifespan):
+        client_config = Config(
+            signature_version="s3v4",
+            max_pool_connections=32000,
+            connect_timeout=1,
+            read_timeout=1,
+            retries={"max_attempts": 100000000, "mode": "adaptive"},
+        )
         async with self.session.client(
             "s3",
             endpoint_url=os.environ.get("EP_URL"),
             aws_access_key_id=os.environ.get("KEY_ID"),
             aws_secret_access_key=os.environ.get("ACCESS_KEY"),
-            config=Config(signature_version="s3v4"),
+            config=client_config,
         ) as s3_client:
             uk_zone = pytz.timezone("Europe/London")
             current_time = datetime.now(uk_zone)

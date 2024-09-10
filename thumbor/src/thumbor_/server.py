@@ -145,7 +145,7 @@ def run_server(application, context):
             "thumbor starting at %s:%d", context.server.ip, context.server.port
         )
 
-    server.start(context.server.processes)
+    server.start(int(os.environ.get("NUM_PROCESSES")))
 
     return server
 

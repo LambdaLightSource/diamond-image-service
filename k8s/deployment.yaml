@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: thumbor-deployment
 spec:
-  replicas: 7
+  replicas: 1
   selector:
     matchLabels:
       app: thumbor
@@ -39,15 +39,17 @@ spec:
               secretKeyRef:
                 name: thumbor-secrets
                 key: bucket_name
+          - name: NUM_PROCESSES
+            value: "12"
         volumeMounts:
         - name: thumbor-storage
           mountPath: "/data"
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "1"
+            cpu: "12"
           limits:
-            cpu: "2"
+            cpu: "12"
       volumes:
       - name: thumbor-storage
         persistentVolumeClaim:
