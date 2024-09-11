@@ -4,7 +4,7 @@
 
 The Diamond Image Service processes and manage images dynamically within a Kubernetes environment. This service uses Thumbor, an open-source photo thumbnail service, to provide features for image visualization, resizing, reformatting, and storage management via a NAS-S3 bucket.
 
-## Technical Architecture
+# Technical Architecture
 
 ![Thumbor Architecture](thumbor/assets/ThumborArchitecture.png)
 
@@ -33,35 +33,35 @@ curl -X PUT -F "media=@dahlia-8546849_1280.jpg" "http://image-service.diamond.ac
 ## NAS-S3 Bucket
 This component is the external storage system where images are ultimately stored and retrieved from.
 
-## Demonstrating Functionality
+# Demonstrating Functionality
 
 The Diamond Image Service supports several functionalities, accessible through structured URLs. The following is a subset of the many manipluations Thumbor supports:
 
-Resizing
+## Resizing
 Resize an image to 300x200 pixels:
 ```bash
 https://image-service.diamond.ac.uk/unsafe/300x200/filename.jpg
 ```
 
-Changing Image Formats
+## Changing Image Formats
 Convert an image to PNG:
 ```bash
 https://image-service.diamond.ac.uk/unsafe/300x200/filename.jpg.png
 ```
 
-Cropping Images
+## Cropping Images
 Crop an image to focus on a specific area:
 ```bash
 https://image-service.diamond.ac.uk/unsafe/100x100:200x200/filename.jpg
 ```
 
-Rotating Images
+## Rotating Images
 Rotate an image by 90 degrees:
 ```bash
 https://image-service.diamond.ac.uk/unsafe/filters:rotate(90)/filename.jpg
 ```
 
-Applying Filters
+## Applying Filters
 Apply a grayscale filter:
 ```bash
 https://image-service.diamond.ac.uk/unsafe/filters:grayscale()/filename.jpg
