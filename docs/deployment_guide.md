@@ -42,6 +42,13 @@ kubectl apply -f k8s/ingress.yaml
 
 # Managing Cache and Storage
 
+There are two cron jobs: one purges the cache and the other manages storage deletion from the NAS S3 Bucket. These can be triggered through the Kubernetes dashboard, and the schedule configured through the respective YAML.
+
+To deploy the Expired Image Deleter please apply the following yaml:
+```bash
+kubectl apply -f k8s/delete-expired.yaml
+```
+
 To view the cache, first find your pod:
 
 ```bash
@@ -68,4 +75,5 @@ git clone https://github.com/LambdaLightSource/CronCachePurger
 kubectl apply -f cronjob.yaml
 ```
 
-There are two cron jobs: one purges the cache and the other manages storage deletion from the NAS S3 Bucket. These can be triggered through the Kubernetes dashboard, and the schedule configured through the respective YAML.
+
+
