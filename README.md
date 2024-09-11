@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Diamond Image Service processes and manage images dynamically within a Kubernetes environment. This service uses Thumbor, an open-source photo thumbnail service, to provide features for image visualization, resizing, reformatting, and storage management via a NAS-S3 bucket.
+The Diamond Image Service processes and manage images dynamically within a Kubernetes environment. This service uses Thumbor, an open-source photo processing and thumbnail tool, to provide features for image visualization, resizing, reformatting, and storage management via a NAS-S3 bucket.
 
 # Technical Architecture
 
