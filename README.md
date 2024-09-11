@@ -64,7 +64,7 @@ https://image-service.diamond.ac.uk/unsafe/filters:rotate(90)/filename.jpg
 ## Applying Filters
 Apply a grayscale filter:
 ```bash
-https://image-service.diamond.ac.uk/unsafe/filters:grayscale()/filename.jpg
+https://image-service.diamond.ac.uk/unsafe/filters:grayscale()/filename.jpg 
 ```
 
 ## Contributing
