@@ -68,6 +68,5 @@ https://image-service.diamond.ac.uk/unsafe/filters:grayscale()/filename.jpg
 ```
 
 ## Contributing
-For getting setup for local testing, refer to the [Developer Guide](/docs/developer_setup.md)
-
-For deployment setup please refer to the [Deployment Guide](/docs/deployment_guide.md) 
+For getting setup for local testing, refer to the [Developer Guide](/docs/developer_setup.md).
+For deployment setup please refer to the [Deployment Guide](/docs/deployment_guide.md).
