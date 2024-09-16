@@ -2,7 +2,11 @@
 
 ## Introduction
 
-The Diamond Image Service processes and manage images dynamically within a Kubernetes environment. This service uses Thumbor, an open-source photo processing and thumbnail tool, to provide features for image visualization, resizing, reformatting, and storage management via a NAS-S3 bucket.
+The Diamond Image Service processes and manage images dynamically within a Kubernetes environment. This service uses Thumbor, an open-source photo processing and thumbnail tool, to provide features for image visualization, resizing, reformatting, and storage management via a NAS-S3 bucket.  
+  
+For instructions on how to use the service please refer to the [User Guide](/docs/user_guide.md).  
+For deployment setup please refer to the [Deployment Guide](/docs/deployment_guide.md).  
+For getting setup for local testing, refer to the [Developer Guide](/docs/developer_setup.md).  
 
 # Technical Architecture
 
@@ -28,8 +32,3 @@ The Expired Image Deleter removes images from the NAS-S3 bucket that have reache
 
 ## NAS-S3 Bucket
 This component is the external storage system where images are ultimately stored and retrieved from.
-
-## Contributing
-For instructions on how to use the service please refer to the [User Guide](/docs/user_guide.md).  
-For deployment setup please refer to the [Deployment Guide](/docs/deployment_guide.md).  
-For getting setup for local testing, refer to the [Developer Guide](/docs/developer_setup.md).  
