@@ -10,12 +10,32 @@ git clone https://github.com/LambdaLightSource/diamond-image-service
 
 ## Running Locally
 
-Navigate to the thumbor_ directory and execute server.py to start the server locally:
+Firstly, please set up your virtual environment to manage the dependencies:
+
+```bash
+python -m venv <env_name>
+```
+
+
+Secondly, activate your virtual environment:
+
+```bash
+source <env_name>/bin/activate
+```
+
+Thirdly, install the project dependencies from pyproject toml:
+
+```bash
+pip install -e .[dev]
+```
+
+Finally, navigate to the thumbor_ directory and execute server.py to start the server locally:
 
 ```bash
 pip install -e .[dev]
 python server.py
 ```
+
 You can access the local server at: http://localhost:8888/unsafe/<image_name>
 
 This will allow you to test image processing directly in your browser.
