@@ -20,6 +20,6 @@ You can access the local server at: http://localhost:8888/unsafe/<image_name>
 
 This will allow you to test image processing directly in your browser.
 
-# Testing Locally with Dev Containers.
+# Testing Locally with Dev Containers in VSCode.
 
 Please ensure the latest version of the dev containers app is installed. Click the blue icon in the bottom left corner of your editor to open the menu and select "Rebuild in Container" to set up your development environment.
