@@ -10,7 +10,7 @@ git clone https://github.com/LambdaLightSource/diamond-image-service
 
 ## Running Locally
 
-Firstly, please set up your virtual environment to manage the dependencies:
+Firstly, navigate to the thumbor_ directory and set up your virtual environment to manage the dependencies:
 
 ```bash
 python -m venv <env_name>
@@ -29,10 +29,9 @@ Thirdly, install the project dependencies from pyproject toml:
 pip install -e .[dev]
 ```
 
-Finally, navigate to the thumbor_ directory and execute server.py to start the server locally:
+Finally execute server.py to start the server locally:
 
 ```bash
-pip install -e .[dev]
 python server.py
 ```
 
