@@ -75,6 +75,7 @@ lockfiles/
 
 # Custom output file
 output.txt
+thumbor.log
 
 # Bucket deatails
 bucket_details.py

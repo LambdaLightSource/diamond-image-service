@@ -1,40 +1,64 @@
-from s3_store.s3_storage import Storage
+import logging
+import os
 from io import BytesIO
-import loaders.bucket_details as bucket_details
-from botocore.config import Config as BotoConfig
-import boto3
+
 import tornado.web
 
+from thumbor_.s3_store.s3_storage import Storage
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 class UploadHandler(tornado.web.RequestHandler):
-    def initialize(self, bucket_name):
-        self.bucket_name = bucket_name
-        self.storage = Storage(context=self)
-        self.s3 = boto3.client(
-            's3',
-            region_name="eu-west-2",
-            endpoint_url=bucket_details.ep_url,
-            aws_access_key_id=bucket_details.key_id,
-            aws_secret_access_key=bucket_details.access_key,
-            config=BotoConfig(signature_version="s3v4"),
-        )
+    def initialize(self):
+        self.bucket_name = os.environ.get("BUCKET_NAME")
 
-    def put(self):
-        fileinfo = self.request.files['media'][0]
-        filename = fileinfo['filename']
-        filebody = fileinfo['body']
+    async def put(self):
+        fileinfo = self.request.files.get("media")
+        if not fileinfo:
+            self.set_status(400)
+            self.write({"status": "error", "message": "No file uploaded"})
+            return
+
+        fileinfo = fileinfo[0]
+        filename = fileinfo["filename"]
+        filebody = fileinfo["body"]
+        lifespan = self.get_query_argument("lifespan", default="180")
+
         try:
-            path = self.storage.put(filename, BytesIO(filebody))
-            self.write({'status': 'success', 'message': f'File {path} uploaded successfully to S3'})
+            async with Storage(context=self) as storage:
+                path = await storage.put(filename, BytesIO(filebody), lifespan)
+            self.set_status(201)
+            self.write(
+                {
+                    "status": "success",
+                    "message": f"File {path} uploaded successfully to S3",
+                }
+            )
+        except KeyError as e:
+            logging.error(f"Key error: {e}")
+            self.set_status(400)
+            self.write({"status": "error", "message": f"Invalid data: {str(e)}"})
         except Exception as e:
-            self.write({'status': 'error', 'message': str(e)})
+            logging.error(f"Unexpected error: {e}")
+            self.set_status(500)
+            self.write({"status": "error", "message": "Internal server error"})
 
-
-    def delete(self):
-        filename = self.get_argument('filename')
+    async def delete(self):
+        filename = self.get_argument("filename")
         try:
-            path = self.storage.delete(filename)
-            self.write({'status': 'success', 'message': f'File {path} deleted successfully from S3'})
+            async with Storage(context=self) as storage:
+                path = await storage.delete(filename)
+            self.set_status(200)
+            self.write(
+                {
+                    "status": "success",
+                    "message": f"File {path} deleted successfully from S3",
+                }
+            )
         except Exception as e:
-            self.write({'status': 'error', 'message': str(e)})
+            logging.error(f"Delete error: {e}")
+            self.set_status(500)
+            self.write({"status": "error", "message": str(e)})

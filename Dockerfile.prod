@@ -1,0 +1,35 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libjpeg-dev \
+    zlib1g-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libwebp-dev \
+    libopenjp2-7-dev \
+    libtiff5-dev \
+    curl \
+    net-tools  \
+    lsof \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PYCURL_SSL_LIBRARY=openssl
+
+COPY requirements.txt /app/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY thumbor/src /app/src/
+
+ENV PYTHONPATH=/app/src  
+
+EXPOSE 8888
+
+RUN useradd -m thumbor
+
+USER thumbor
+
+CMD ["python", "-m", "thumbor_.__main__", "--serve"]

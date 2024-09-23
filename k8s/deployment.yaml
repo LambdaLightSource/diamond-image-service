@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thumbor-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thumbor
+  template:
+    metadata:
+      labels:
+        app: thumbor
+    spec:
+      containers:
+      - name: thumbor
+        image: gcr.io/diamond-privreg/image-service/dls-thumbor-extension:v1
+        ports:
+        - containerPort: 8888
+        args: ["python", "-m", "thumbor_.__main__", "--serve"]
+        env:
+          - name: EP_URL
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: ep_url
+          - name: KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: key_id
+          - name: ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: access_key
+          - name: BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: thumbor-secrets
+                key: bucket_name
+          - name: NUM_PROCESSES
+            value: "12"
+        volumeMounts:
+        - name: thumbor-storage
+          mountPath: "/data"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "12"
+          limits:
+            cpu: "12"
+      volumes:
+      - name: thumbor-storage
+        persistentVolumeClaim:
+          claimName: thumbor-pvc
